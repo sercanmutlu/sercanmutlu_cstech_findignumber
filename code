@@ -1,0 +1,250 @@
+ #include <stdio.h>
+    #include <stdlib.h>
+    #include <time.h>
+    #include <iostream>
+    #include <cstdio>
+    #include <limits>
+
+    using namespace std;
+
+    int arraysize = 10;
+    int rand_number(void);
+    int is_valid(int number_check);
+    void takeDigits(int number, int *arr);
+    void position(int *arr, int positive, int negative);
+    int invalidInputChecker(int number);
+    int allDigits[] = {0,1,2,3,4,5,6,7,8,9};
+    int digits[4];
+    int generatedNumber[4];
+    int predictedNumber[4];
+    int correctDigits[4];
+    int lastPredictedNumber[4];
+    int returnvalue1 = 0;
+    int returnvalue2 = 0;
+    int invalidinputcounter = 0;
+    int counter1 =1 ;
+    int counter2 =1 ;
+    int predictionPart = 0;
+    char hintarray[10];
+
+
+
+
+
+    int main(void)
+    {
+     int  generateNumber;
+     int n, firstdigit[10], seconddigit[10], thirddigit[10],fourthdigit[10], B[10], C[10],i, j;
+     int wrongPosition ;
+     int correctPosition ;
+
+     cout << "I will generate a number whose digits are different from each other." << "\n";
+     cout << "Press ENTER when you are ready..." << "\n";
+
+     getchar(); ///waits for ENTER to start the game
+     srand(time(NULL)); /// helps us to generate random number by computer's clock
+
+     while (!is_valid(generateNumber = rand_number()));     /// checks the generated number is valid(has unique digits) and pass the while loop when it is valid
+
+     cout << generateNumber << "\n";  /// optionally prints the generated number
+     cout << "Now, You can predict my number...  Let's Start "<< "\n";
+
+     takeDigits(generateNumber, generatedNumber);  /// takes the digits of generated number to compare with inputs of the user
+
+     while (!predictionPart) /// first part begin
+     {
+        if (predictionPart == 0)
+        {
+        int inputnumber;
+        cin >> inputnumber ;    /// takes the guessed number by user(player)
+
+        if (invalidInputChecker(inputnumber))  /// checks if the input is valid or not
+        {
+            takeDigits(inputnumber, predictedNumber);   /// if the input is valid, then take the digits of it
+
+            for (int i=0; i < 4; i++)
+            {
+
+                if ( generatedNumber[i] == predictedNumber[i])  /// check + and - positions of given input ( return value1 = +  :  return value2 = - )
+                    returnvalue1 = returnvalue1 + 1 ;
+                else
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if ( (generatedNumber[i] == predictedNumber[j]) && (i != j))
+                                returnvalue2 = returnvalue2 + 1 ;
+                    }
+
+                }
+            }
+
+
+            if (returnvalue1 < 4)   /// if + ones are less than 4, the game will continue and print out the hints to console
+            cout <<  "+" << returnvalue1 << " -" << returnvalue2 << "\n" ;
+            else
+            {
+                predictionPart = 1;
+                cout << "WELL DONE -> You won in " << counter1 << " proper try\n" ;
+                if (invalidinputcounter > 0)
+                cout << "You entered " << invalidinputcounter << " invalid input\n" ;
+                cout << "This is my turn!!!\n" ;
+            }
+            counter1++;
+            returnvalue1 = 0;
+            returnvalue2 = 0;
+        }
+
+        else
+        {
+            invalidinputcounter++;
+        }
+        }
+    }
+
+
+            for(i=0; B[i-1]!= 4; i++)  /// for loop continues until B[i-1] (correct position) equals to 4
+            {
+                firstdigit[i]=0; seconddigit[i]=0;
+
+                while((firstdigit[i]==0)||(firstdigit[i]==seconddigit[i])||(firstdigit[i]==thirddigit[i])||(firstdigit[i]==fourthdigit[i])||(seconddigit[i]==thirddigit[i])||(seconddigit[i]==fourthdigit[i])||(thirddigit[i]==fourthdigit[i]))
+                {
+                    fourthdigit[i] = rand()%10;
+                    thirddigit[i] = rand()%10;
+                    seconddigit[i] = rand()%10;
+                    firstdigit[i] = rand()%10;
+
+                }
+                for(j=0;j<i;j++)            ///looking for a number that fits a given set of Input and Outputs.
+                                            ///As the set grows in size, the number of possible solutions reduce, until there is only one left and that is the number we had thought of.ï»¿
+                {
+                    correctPosition=0; wrongPosition=0;
+                    if((firstdigit[j]==seconddigit[i])||(firstdigit[j]==thirddigit[i])||(firstdigit[j]==fourthdigit[i])) {wrongPosition=wrongPosition+1;} else if (firstdigit[j]==firstdigit[i]){correctPosition=correctPosition+1; } // if math the digits but wrong positions counter C1 increases 1
+                    if((seconddigit[j]==firstdigit[i])||(seconddigit[j]==thirddigit[i])||(seconddigit[j]==fourthdigit[i])) {wrongPosition=wrongPosition+1;} else if (seconddigit[j]==seconddigit[i]){correctPosition=correctPosition+1; } // else if math the digits and correct positions counter B1 increases 1
+                    if((thirddigit[j]==seconddigit[i])||(thirddigit[j]==firstdigit[i])||(thirddigit[j]==fourthdigit[i])) {wrongPosition=wrongPosition+1;} else if (thirddigit[j]==thirddigit[i]){correctPosition=correctPosition+1; }
+                    if((fourthdigit[j]==seconddigit[i])||(fourthdigit[j]==thirddigit[i])||(fourthdigit[j]==firstdigit[i])) {wrongPosition=wrongPosition+1;} else if (fourthdigit[j]==fourthdigit[i]){correctPosition=correctPosition+1; }
+
+                    if((correctPosition!=B[j])||(wrongPosition!=C[j])) /// if the matching values are different from each other generates new number
+                    {
+                        firstdigit[i]=0; seconddigit[i]=0;
+
+                        while((firstdigit[i]==0)||(firstdigit[i]==seconddigit[i])||(firstdigit[i]==thirddigit[i])||(firstdigit[i]==fourthdigit[i])||(seconddigit[i]==thirddigit[i])||(seconddigit[i]==fourthdigit[i])||(thirddigit[i]==fourthdigit[i]))
+                        {
+                            fourthdigit[i] = rand()%10;
+                            thirddigit[i] = rand()%10;
+                            seconddigit[i] = rand()%10;
+                            firstdigit[i] = rand()%10;
+
+                        }
+                        j=-1;
+                    }
+                }
+                cout << "Guess\t" << firstdigit[i]<<seconddigit[i]<<thirddigit[i]<<fourthdigit[i] << "\n";
+
+                cin >> hintarray ; /// takes the hint
+
+                for (int k = 0; k < 10; k++)
+                {
+
+                    if (hintarray[k] == '-')
+                    {
+                        C[i] = (int)hintarray[k+1] -48; /// ASCII to number
+
+                    }
+
+                    else if (hintarray[k] == '+')
+                    {
+                        B[i] = (int)hintarray[k+1] -48;
+
+                    }
+
+
+                }
+
+
+                if (B[i]==4)
+                {
+                    cout << "I won in "<< i+1<<" chances" ;
+                }
+
+            }
+
+
+
+
+
+     return 0;
+    }
+    /*****************************************************************
+    this function checks the input is entered correctly or not
+    *****************************************************************/
+
+    int invalidInputChecker(int number)
+    {
+        if(cin.fail())
+        {       ///checks if the given input is a number or char
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input Try again" << endl;
+            return 0;
+        }
+        else if (((number > 10000) || (number < 1000)))
+        {
+            /// check if the given number input is 4 digit number
+            cout << "Invalid input Try again" << endl;
+            return 0;
+        }
+        else if (((number < 10000) || (number > 1000)) & !is_valid(number))
+        {
+            /// check if the given number input is 4 unique digit number
+            cout << "Invalid input Try again" << endl;
+            return 0;
+        }
+
+        return 1;
+
+    }
+
+  /*****************************************************************
+    this function takes the input number to compare digits of it
+  *****************************************************************/
+    void takeDigits(int number, int *arr)
+    {
+        int counter = 0;
+
+        while (number != 0)
+        {
+          arr[counter] = number % 10 ;
+          number = number/10;
+          counter++;
+        }
+    }
+  /*****************************************************************
+    this function generates a four digit random number
+  *****************************************************************/
+  int rand_number(void)
+  {
+     return rand() % 9000 + 1000;
+  }
+  /****************************************************************
+    this function checks if four digit random number has unique digits
+    if it is valid the return value is 1, if it is not the return value is 0.
+  *****************************************************************/
+  int is_valid(int number_check)
+  {
+     int temp, i, j;
+
+     for (i = 0; i < 10; i++)
+        {
+        j = 0;
+        temp = number_check;
+
+        while (temp > 0) {
+           if (temp % 10 == i)
+              j++;
+           if (j > 1)
+              return 0;
+           temp /= 10;
+        }
+     }
+     return 1;
+  }
